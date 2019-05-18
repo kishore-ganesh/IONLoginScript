@@ -14,22 +14,31 @@ my_ip = ip_route[(my_ip_pos+4):]
 my_ip = my_ip.split(' metric')[0]
 my_ip = str(my_ip)
 
+username_list = ['','']
+password_list = ['','']
+
 if default:
-	print("Gateway: " + default)
+	print("Gateway:  " + default)
 	print("local ip: " + my_ip)
+	i = 0
+	length = len(username_list)
 
-	try:
-		url="http://"+default+"/"+"login"
-		r=requests.post(url, {
-			'username': '',
-			'password': '',
-			'radius1-44115'	:'12'
-		},timeout=(1,1))
+	while i < length:
+		try:
+			url="http://"+default+"/"+"login"
+			r=requests.post(url, {
+				'username': username_list[i],
+				'password': password_list[i],
+				'radius1-44115'	:'12'
+			},timeout=(1,1))
 
-		if r.text.find("You are logged in"):
-				print("Log in success!")
-	except:
-			print("=>Time-out<=")
+			if r.text.find("You are logged in"):
+				print(username_list[i] + " logged in")
+				break
+
+		except:
+			print("Time-out on " + username_list[i])
+			i += 1
 
 else:
 	print("=>Bad Gateway<=")
